@@ -42,6 +42,9 @@ public class SampleServlet extends HttpServlet {
 					+ "Please provide a valid name!!";
 		} else {
 			responseStr = "Hello " + userName + " !!";
+			User user = new User();
+			user.setUserName(userName);
+			DBHelper.saveUser(user);
 		}
 		
 		responseStr += "<br/><a href='index.html'>Go Back</a>";

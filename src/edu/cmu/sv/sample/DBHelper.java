@@ -2,12 +2,19 @@ package edu.cmu.sv.sample;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 
 public class DBHelper {
-	private static final String DB_CONN_URL = "";
-	private static final String USERNAME = "";
-	private static final String PASSWORD = "";
+	private static final String DB_CONN_URL = "jdbc:h2:file:~/h2db";
+	private static final String USERNAME = "surya";
+	private static final String PASSWORD = "kiran";
+	
+	static {
+		createTableIfMissing();
+	}
 
 	public static Connection getConnection() throws SQLException, ClassNotFoundException {
 		Class.forName("org.h2.Driver");
@@ -17,7 +24,31 @@ public class DBHelper {
 		return conn;
 	}
 	
-	public User saveUser(User user) {
+	public static User saveUser(User user) {
+		String insertQuery = "insert into users (name) values (?)";
+		try(Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(insertQuery);) {
+			stmt.setString(1, user.getUserName());
+			int rows = stmt.executeUpdate();
+			System.out.println( "User '" + user.getUserName() + "' saved. " + rows + " rows persisted to DB");
+			
+			conn.commit();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return user;
+	}
+	
+	public static List<String> loadAllUserNames() {		
+		return null;
+	}
+	
+	public static void createTableIfMissing() {
+		String createStatement = "create table users (name varchar(50))";
+		try(Connection conn = getConnection(); Statement stmt = conn.createStatement();) {
+			stmt.executeUpdate(createStatement);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
