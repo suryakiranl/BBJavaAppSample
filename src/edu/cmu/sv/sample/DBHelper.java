@@ -3,8 +3,10 @@ package edu.cmu.sv.sample;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DBHelper {
@@ -26,7 +28,8 @@ public class DBHelper {
 	
 	public static User saveUser(User user) {
 		String insertQuery = "insert into users (name) values (?)";
-		try(Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(insertQuery);) {
+		try(Connection conn = getConnection(); 
+				PreparedStatement stmt = conn.prepareStatement(insertQuery);) {
 			stmt.setString(1, user.getUserName());
 			int rows = stmt.executeUpdate();
 			System.out.println( "User '" + user.getUserName() + "' saved. " + rows + " rows persisted to DB");
@@ -39,8 +42,21 @@ public class DBHelper {
 		return user;
 	}
 	
-	public static List<String> loadAllUserNames() {		
-		return null;
+	public static List<String> loadAllUserNames() {
+		List<String> userNames = new ArrayList<String>();
+		String selectStmt = "select name from users order by name";
+		
+		try(Connection conn = getConnection(); 
+				PreparedStatement stmt = conn.prepareStatement(selectStmt);
+				ResultSet rs = stmt.executeQuery();) {
+			while(rs.next()) {
+				userNames.add(rs.getString("name"));
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userNames;
 	}
 	
 	public static void createTableIfMissing() {
@@ -48,7 +64,7 @@ public class DBHelper {
 		try(Connection conn = getConnection(); Statement stmt = conn.createStatement();) {
 			stmt.executeUpdate(createStatement);
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			
 		}
 	}
 }
