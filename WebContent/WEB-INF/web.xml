@@ -8,9 +8,20 @@
 		<servlet-name>SampleServlet</servlet-name>
 		<servlet-class>edu.cmu.sv.sample.SampleServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>ShowUserNames</display-name>
+		<servlet-name>ShowUserNames</servlet-name>
+		<servlet-class>edu.cmu.sv.sample.ShowUserNames</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>SampleServlet</servlet-name>
 		<url-pattern>/SampleServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ShowUserNames</servlet-name>
+		<url-pattern>/ShowUserNames</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
