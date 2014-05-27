@@ -28,7 +28,12 @@ public class SampleServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
-
+		PrintWriter out = response.getWriter();
+		out.println("<html><head><meta charset='UTF-8'>");
+		out.println("<link href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' rel='stylesheet'>");
+		out.println("<title>Hi there page :)</title></head>");
+		out.println("<body><br/><br/><br/><div style='text-align: center' class='lead'>");
+		
 		String responseStr = "";
 
 		String userName = request.getParameter("userName");
@@ -40,9 +45,8 @@ public class SampleServlet extends HttpServlet {
 		}
 		
 		responseStr += "<br/><a href='index.html'>Go Back</a>";
-
-		PrintWriter out = response.getWriter();
 		out.println(responseStr);
+		out.println("</div></body></html>");
 	}
 
 	/**
